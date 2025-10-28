@@ -1,0 +1,1 @@
+// client configurado do Axios para OMDb API

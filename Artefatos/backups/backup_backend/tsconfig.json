@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    /* Módulo e Resolução */
+    "module": "NodeNext", // Corrigido e unificado para o sistema de módulos moderno do Node
+    "moduleResolution": "NodeNext", // Adicionado: Essencial para resolver imports corretamente
+
+    /* Interoperabilidade e Tipos */
+    "esModuleInterop": true, // Mantido: Facilita a importação de módulos CommonJS
+    "resolveJsonModule": true, // Mantido: Permite importar arquivos .json
+    "strict": true, // Mantido: Ativa a checagem de tipos rigorosa
+
+    /* Configurações do Projeto */
+    "target": "es2020", // Versão do JavaScript de saída
+    "rootDir": "./src", // Onde está seu código TypeScript
+    "skipLibCheck": true, // Evita a verificação de tipos em arquivos de declaração (.d.ts)
+
+    /* Emissão de Arquivos (Ambiente de Desenvolvimento) */
+    // Com "noEmit": true, o ts-node compila em memória e não gera arquivos .js
+    // Para um build de produção, você deve mudar isso para 'false'
+    "noEmit": true,
+    "allowImportingTsExtensions": true // Necessário para "noEmit": true
+  },
+  "include": ["src/**/*", "src/utils/omdb.util.ts", "src/models", "src/db/config/database.ts"] // Pasta que o TypeScript deve analisar
+  // "include": ["src/**/*", "config/omdb.ts", "config/database.ts"] // Pasta que o TypeScript deve analisar
+}

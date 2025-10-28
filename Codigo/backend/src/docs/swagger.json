@@ -1,0 +1,1253 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "dtiflix-backend",
+    "description": "Full stack application built with Next.js + TypeScript and Sequelize, integrating the OMDb API to search movies, manage favorites, write reviews, and display personalized statistics in a dashboard. Includes search history, average ratings, favorite genres/decades, and a responsive UI.",
+    "version": "1.0.0",
+    "license": {
+      "name": "ISC"
+    },
+    "termsOfService": "http://localhost:5000/api/",
+    "contact": {
+      "name": "Davi Cândido",
+      "email": "davicandidopucminas@gmail.com",
+      "phone": "+55 (31) 97306-7259"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api/",
+      "description": "Ambiente de desenvolvimento"
+    },
+    {
+      "url": "http://localhost:5000/api/",
+      "description": "Ambiente de produção"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Favorite": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID do favorito"
+          },
+          "movie_id": {
+            "type": "integer",
+            "description": "ID do filme favoritado"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Movie": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "imdbID": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "decade": {
+            "type": "integer"
+          },
+          "plot": {
+            "type": "string"
+          },
+          "genre": {
+            "type": "string"
+          },
+          "rated": {
+            "type": "string"
+          },
+          "runtime": {
+            "type": "string"
+          },
+          "director": {
+            "type": "string"
+          },
+          "actors": {
+            "type": "string"
+          },
+          "poster": {
+            "type": "string"
+          },
+          "imdbRating": {
+            "type": "number"
+          },
+          "ratings": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "type": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Review": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "movie_id": {
+            "type": "integer"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "SearchHistory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "movie_id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "decade": {
+            "type": "integer"
+          },
+          "genre": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "searchedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "StatsCount": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "StatsGroup": {
+        "type": "object",
+        "properties": {
+          "genre": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "decade": {
+            "type": "integer"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "StatsAverage": {
+        "type": "object",
+        "properties": {
+          "media": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/favorites/search/{imdbID}": {
+      "get": {
+        "summary": "Busca um favorito pelo IMDb ID do filme",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imdbID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "IMDb ID do filme"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Favorito encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Favorite"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Favorito não encontrado"
+          }
+        }
+      }
+    },
+    "/favorites/last-date": {
+      "get": {
+        "summary": "Retorna favoritos ordenados pela data de criação",
+        "tags": ["Favorites"],
+        "responses": {
+          "200": {
+            "description": "Lista de favoritos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Favorite"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favorites": {
+      "get": {
+        "summary": "Lista todos os favoritos",
+        "tags": ["Favorites"],
+        "responses": {
+          "200": {
+            "description": "Lista de favoritos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Favorite"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um favorito",
+        "tags": ["Favorites"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "description": "ID do filme"
+                  }
+                },
+                "required": ["id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Favorito criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Favorite"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta todos os favoritos",
+        "tags": ["Favorites"],
+        "responses": {
+          "200": {
+            "description": "Todos os favoritos deletados"
+          }
+        }
+      }
+    },
+    "/favorites/{id}": {
+      "get": {
+        "summary": "Busca um favorito pelo ID",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID do favorito"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Favorito encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Favorite"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza um favorito",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID do favorito"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Favorito atualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Favorite"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta um favorito pelo ID",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID do favorito"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Favorito deletado"
+          }
+        }
+      }
+    },
+    "/movies/search/{imdbID}/{queryTerm}": {
+      "get": {
+        "summary": "Busca filme por IMDb ID com registro de histórico de pesquisa",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imdbID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "IMDb ID do filme"
+          },
+          {
+            "in": "path",
+            "name": "queryTerm",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Termo de pesquisa usado pelo usuário"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Filme encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Filme não encontrado"
+          }
+        }
+      }
+    },
+    "/movies/title/{title}": {
+      "get": {
+        "summary": "Busca filmes pelo título",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "title",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Título do filme"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de filmes encontrados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Movie"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/genre/{genre}": {
+      "get": {
+        "summary": "Busca filmes por gênero",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "genre",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Gênero do filme"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de filmes encontrados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Movie"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/year/{year}": {
+      "get": {
+        "summary": "Busca filmes por ano",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "year",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Ano do filme"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de filmes encontrados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Movie"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/decade/{decade}": {
+      "get": {
+        "summary": "Busca filmes por década",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "decade",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Década do filme"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de filmes encontrados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Movie"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies": {
+      "get": {
+        "summary": "Lista todos os filmes",
+        "tags": ["Movies"],
+        "responses": {
+          "200": {
+            "description": "Lista de filmes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Movie"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um novo filme",
+        "tags": ["Movies"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Filme criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/{id}": {
+      "get": {
+        "summary": "Busca filme pelo ID",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID do filme"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Filme encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza filme",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Filme atualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta filme",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Filme deletado"
+          }
+        }
+      }
+    },
+    "/movies/{movieId}/reviews": {
+      "get": {
+        "summary": "Lista avaliações (reviews) de um filme",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "movieId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID do filme"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de avaliações",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/top-rated": {
+      "get": {
+        "summary": "Retorna as reviews mais bem avaliadas",
+        "tags": ["Reviews"],
+        "responses": {
+          "200": {
+            "description": "Lista de reviews ordenadas por nota",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Review"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews": {
+      "get": {
+        "summary": "Lista todas as reviews",
+        "tags": ["Reviews"],
+        "responses": {
+          "200": {
+            "description": "Lista de reviews",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Review"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria uma nova review",
+        "tags": ["Reviews"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "movie_id": {
+                    "type": "integer"
+                  },
+                  "comment": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  }
+                },
+                "required": ["movie_id", "rating"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Review criada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta todas as reviews",
+        "tags": ["Reviews"],
+        "responses": {
+          "200": {
+            "description": "Todas as reviews deletadas"
+          }
+        }
+      }
+    },
+    "/reviews/{id}": {
+      "get": {
+        "summary": "Busca review pelo ID",
+        "tags": ["Reviews"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID da review"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza uma review",
+        "tags": ["Reviews"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID da review"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Review atualizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta uma review pelo ID",
+        "tags": ["Reviews"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review deletada"
+          }
+        }
+      }
+    },
+    "/search-history": {
+      "get": {
+        "summary": "Lista todo o histórico de buscas",
+        "tags": ["SearchHistory"],
+        "responses": {
+          "200": {
+            "description": "Lista de buscas ordenadas pela data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchHistory"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um novo registro de histórico (normalmente usado internamente)",
+        "tags": ["SearchHistory"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "movie_id": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "query": {
+                    "type": "string"
+                  },
+                  "year": {
+                    "type": "integer"
+                  },
+                  "decade": {
+                    "type": "integer"
+                  },
+                  "genre": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                "required": ["movie_id", "title", "query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registro criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchHistory"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta todos os registros do histórico",
+        "tags": ["SearchHistory"],
+        "responses": {
+          "200": {
+            "description": "Todos os registros deletados"
+          }
+        }
+      }
+    },
+    "/search-history/{id}": {
+      "get": {
+        "summary": "Busca um registro do histórico pelo ID",
+        "tags": ["SearchHistory"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID do registro"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchHistory"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza um registro do histórico",
+        "tags": ["SearchHistory"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID do registro"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "query": {
+                    "type": "string"
+                  },
+                  "year": {
+                    "type": "integer"
+                  },
+                  "decade": {
+                    "type": "integer"
+                  },
+                  "genre": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registro atualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchHistory"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta um registro do histórico pelo ID",
+        "tags": ["SearchHistory"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro deletado"
+          }
+        }
+      }
+    },
+    "/stats/count": {
+      "get": {
+        "summary": "Retorna a contagem total de registros de busca",
+        "tags": ["Dashboard"],
+        "responses": {
+          "200": {
+            "description": "Contagem total",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsCount"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/count-types": {
+      "get": {
+        "summary": "Contagem de registros por tipo",
+        "tags": ["Dashboard"],
+        "responses": {
+          "200": {
+            "description": "Contagem por tipo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatsGroup"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/count-genrer": {
+      "get": {
+        "summary": "Contagem de registros por gênero",
+        "tags": ["Dashboard"],
+        "responses": {
+          "200": {
+            "description": "Contagem por gênero",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatsGroup"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/favorite-decade": {
+      "get": {
+        "summary": "Contagem de favoritos por década",
+        "tags": ["Dashboard"],
+        "responses": {
+          "200": {
+            "description": "Favoritos agrupados por década",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatsGroup"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/review-media": {
+      "get": {
+        "summary": "Média das avaliações (ratings)",
+        "tags": ["Dashboard"],
+        "responses": {
+          "200": {
+            "description": "Média das avaliações",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsAverage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/year-search": {
+      "get": {
+        "summary": "Contagem de buscas por ano",
+        "tags": ["Dashboard"],
+        "responses": {
+          "200": {
+            "description": "Buscas agrupadas por ano",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatsGroup"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}

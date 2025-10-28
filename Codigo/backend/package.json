@@ -1,0 +1,61 @@
+{
+  "name": "dtiflix-backend",
+  "version": "1.0.0",
+  "description": "Full stack application built with Next.js + TypeScript and Sequelize, integrating the OMDb API to search movies, manage favorites, write reviews, and display personalized statistics in a dashboard. Includes search history, average ratings, favorite genres/decades, and a responsive UI.",
+  "keywords": [
+    "dti",
+    "backend",
+    "express"
+  ],
+  "scripts": {
+    "start": "nodemon src/server.js",
+    "dev": "nodemon src/server.js",
+    "db:cli": "sudo docker exec -it postgres-seguro psql -U postgres -d dtiflix_db",
+    "db:reset": "npm run db:drop && npm run db:create && npm run db:migrate && npm run db:seed",
+    "db:drop": "sudo docker exec -it postgres-seguro psql -U postgres -c 'DROP DATABASE IF EXISTS dtiflix_db;'",
+    "db:create": "sudo docker exec -it postgres-seguro psql -U postgres -c 'CREATE DATABASE dtiflix_db;'",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write ."
+  },
+  "homepage": "https://github.com/DaviKandido/dtiFlix#readme",
+  "bugs": {
+    "url": "https://github.com/DaviKandido/dtiFlix/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaviKandido/dtiFlix.git"
+  },
+  "license": "ISC",
+  "author": "Davi Cândido de Almeida",
+  "type": "commonjs",
+  "main": "src/server.js",
+  "dependencies": {
+    "@isatech/express-sequelize-query-filter": "^0.0.3",
+    "axios": "^1.12.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.37.0",
+    "eslint-config-prettier": "^10.1.8",
+    "express": "^5.1.0",
+    "moment-timezone": "^0.6.0",
+    "multer": "^2.0.2",
+    "nodemon": "^3.1.10",
+    "npm-check-updates": "^19.0.0",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "prettier": "^3.6.2",
+    "redis": "^5.8.3",
+    "sequelize": "^6.37.7",
+    "sequelize-auto-migrations": "^1.0.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "eslint-plugin-prettier": "^5.5.4",
+    "sequelize-migration-generator": "^0.1.0"
+  }
+}
