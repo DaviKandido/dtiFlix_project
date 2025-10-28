@@ -21,6 +21,3 @@ Garantir uma experiência fluida, responsiva e moderna, com foco em clareza visu
 - Hierarquia visual clara.
 - Feedback instantâneo nas ações do usuário (toasts).
 - Uso de loaders animados e placeholders.
-
-## 🧾 Observações
-O design foi inspirado na identidade da **dti digital**, adaptando tons de azul e roxo.
