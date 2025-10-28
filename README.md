@@ -2,7 +2,7 @@
 
 ## 🎬 Sobre o Projeto
 
-O **dtiFlix** é uma aplicação web full stack desenvolvida como parte do desafio técnico da dti digital.
+O **dtiFlix** é uma aplicação web full stack.
 Seu objetivo é permitir que o usuário busque filmes na **OMDb API**, favorite suas obrar preferidos, registre avaliações pessoais e visualize estatísticas sobre seus hábitos cinematográficos.
 
 A aplicação foi construída com **Next.js (React + TypeScript + Material UI/Tailwind + Magic UI + Recharts)** no frontend e **Node.js + Express + Sequelize + PostgreSQL + Docker + Swagger** no backend, adotando uma arquitetura organizada e desacoplada baseada em camadas de controle, modelagem e persistência **(MVC - Model-View-Controller)**.
@@ -211,9 +211,6 @@ Durante o desenvolvimento, utilizei diversas ferramentas que ajudaram a acelerar
 ---
 
 ## 🧾 Licença
-
-Este projeto foi desenvolvido exclusivamente para fins avaliativos no processo seletivo da **dti digital**.
 Código e documentação sob a licença padrão CC BY 4.0.
 📄 [`LICENSE`](./LICENSE)
 
-> 💡 Desenvolvido como parte do **processo seletivo para estágio em desenvolvimento de software**.
