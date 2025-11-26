@@ -36,7 +36,6 @@ export const AnimatedThemeToggler = ({
   }, [])
 
   const toggleTheme = useCallback(async () => {
-    if (!buttonRef.current) return
 
     await document.startViewTransition(() => {
       flushSync(() => {
@@ -47,8 +46,12 @@ export const AnimatedThemeToggler = ({
       })
     }).ready
 
-    const { top, left, width, height } =
-      buttonRef.current.getBoundingClientRect()
+    if (!buttonRef.current) return
+
+    const rect = buttonRef.current?.getBoundingClientRect()
+    if (!rect) return
+      
+
     const x = left + width / 2
     const y = top + height / 2
     const maxRadius = Math.hypot(

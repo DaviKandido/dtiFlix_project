@@ -49,7 +49,7 @@ export default function Home() {
     placeholderData: [],
   });
 
-  // Query para filmes populares (exemplo com filtro)
+  // Query para filmes populares
   const { data: popularMovies, isLoading: isLoadingPopular, error: popularError, isFetching: isFetchingPopular } = useQuery<
     Movie[]
   >({
@@ -135,7 +135,7 @@ export default function Home() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-purple-900/20 rounded-3xl">
         <div className="flex flex-col items-center w-full">
           {/* Hero Section */}
-          {showHero && (
+          
             <div className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white py-16 md:py-24 rounded-3xl">
               <div className="container mx-auto px-4 text-center">
                 <div className="flex items-center justify-center gap-3 mb-6">
@@ -189,10 +189,10 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          )}
 
-          {/* Search Header (quando não está no hero) */}
-          {!showHero && (
+
+          {/* Search Header */}
+          {/* {!showHero && (
             <div className="w-full bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 py-8">
               <div className="container mx-auto px-4">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -233,7 +233,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Conteúdo Principal */}
           <div className="container mx-auto px-4 py-4 w-full">
@@ -314,7 +314,7 @@ export default function Home() {
                 {/* Header dos Resultados */}
                 <div className="flex items-center justify-between mb-8">
                   <div>
-                    <h3 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                    <h3 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3 mt-2">
                       <IconSearch className="w-6 h-6 text-blue-500" />
                       {searchResults?.length || 0} resultados encontrados
                     </h3>

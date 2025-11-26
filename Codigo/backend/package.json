@@ -10,10 +10,10 @@
   "scripts": {
     "start": "nodemon src/server.js",
     "dev": "nodemon src/server.js",
-    "db:cli": "sudo docker exec -it postgres-seguro psql -U postgres -d dtiflix_db",
+    "db:cli": "docker exec -it postgres-seguro psql -U postgres -d dtiflix_db",
     "db:reset": "npm run db:drop && npm run db:create && npm run db:migrate && npm run db:seed",
-    "db:drop": "sudo docker exec -it postgres-seguro psql -U postgres -c 'DROP DATABASE IF EXISTS dtiflix_db;'",
-    "db:create": "sudo docker exec -it postgres-seguro psql -U postgres -c 'CREATE DATABASE dtiflix_db;'",
+    "db:drop": "docker exec -it postgres-seguro psql -U postgres -c \"DROP DATABASE IF EXISTS dtiflix_db;\"",
+    "db:create": "docker exec -it postgres-seguro psql -U postgres -c \"CREATE DATABASE dtiflix_db;\"",
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:seed": "npx sequelize-cli db:seed:all",
     "lint": "eslint .",

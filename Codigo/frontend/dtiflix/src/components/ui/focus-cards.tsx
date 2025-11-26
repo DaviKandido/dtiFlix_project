@@ -61,7 +61,7 @@ export function FocusCards({ cards }: { cards: Card[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mx-auto md:px-8 w-full">
       {cards.map((card, index) => (
-        <Link href={`/movie/${card.id}`}>
+        <Link href={`/movie/${card.id}`} key={index}>
           <Card
             key={index}
             card={card}
