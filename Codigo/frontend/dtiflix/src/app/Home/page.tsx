@@ -43,16 +43,19 @@ export default function Home() {
       searchTerm && searchTerm.length > 0
         ? MovieService.getByTitle(searchTerm)
         : MovieService.getAll({
-          order: [["imdbRating", "DESC"]],
-          limit: 50,
-        }),
+            order: [["imdbRating", "DESC"]],
+            limit: 50,
+          }),
     placeholderData: [],
   });
 
   // Query para filmes populares
-  const { data: popularMovies, isLoading: isLoadingPopular, error: popularError, isFetching: isFetchingPopular } = useQuery<
-    Movie[]
-  >({
+  const {
+    data: popularMovies,
+    isLoading: isLoadingPopular,
+    error: popularError,
+    isFetching: isFetchingPopular,
+  } = useQuery<Movie[]>({
     queryKey: ["movies", "popular"],
     queryFn: () =>
       MovieService.getAll({
@@ -63,7 +66,12 @@ export default function Home() {
   });
 
   // Query para filmes recentes
-  const { data: recentMovies, isLoading: isLoadingRecent, error: recentError, isFetching: isFetchingRecent } = useQuery<Movie[]>({
+  const {
+    data: recentMovies,
+    isLoading: isLoadingRecent,
+    error: recentError,
+    isFetching: isFetchingRecent,
+  } = useQuery<Movie[]>({
     queryKey: ["movies", "recent"],
     queryFn: () =>
       MovieService.getAll({
@@ -135,61 +143,65 @@ export default function Home() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-purple-900/20 rounded-3xl">
         <div className="flex flex-col items-center w-full">
           {/* Hero Section */}
-          
-            <div className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white py-16 md:py-24 rounded-3xl">
-              <div className="container mx-auto px-4 text-center">
-                <div className="flex items-center justify-center gap-3 mb-6">
-                  <IconSparkles className="w-8 h-4 text-yellow-300" />
-                  <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-white bg-gradient-to-r from-yellow-300 to-pink-300 ">
-                    DtiFlix
-                  </h1>
+
+          <div className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white py-16 md:py-24 rounded-3xl">
+            <div className="container mx-auto px-4 text-center">
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <IconSparkles className="w-8 h-4 text-yellow-300" />
+                <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-white bg-gradient-to-r from-yellow-300 to-pink-300 ">
+                  DtiFlix
+                </h1>
+              </div>
+
+              <p className="my-10 text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
+                Descubra, explore e viva experiências cinematográficas incríveis
+              </p>
+
+              <div className="max-w-2xl mx-auto mb-12">
+                <PlaceholdersAndVanishInput
+                  placeholders={placeholders}
+                  onChange={handleChange}
+                  onSubmit={onSubmit}
+                />
+                {isSearching && (
+                  <button
+                    onClick={handleClearSearch}
+                    className="px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors bg-white rounded mt-5"
+                  >
+                    Limpar busca
+                  </button>
+                )}
+              </div>
+
+              {/* Stats Quick View */}
+              <div className="flex flex-row items-center justify-center gap-4 mt-10">
+                <div className="text-center">
+                  <div className="text-2xl md:text-3xl font-bold dark:text-blue-100  mb-1">
+                    {validRecentMovies.length}+
+                  </div>
+                  <div className="text-blue-100 text-sm">Filmes Recentes</div>
                 </div>
-
-                <p className="my-10 text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
-                  Descubra, explore e viva experiências cinematográficas
-                  incríveis
-                </p>
-
-                <div className="max-w-2xl mx-auto mb-12">
-                  <PlaceholdersAndVanishInput
-                    placeholders={placeholders}
-                    onChange={handleChange}
-                    onSubmit={onSubmit}
-                  />
+                <div className="text-center">
+                  <div className="text-2xl md:text-3xl font-bold dark:text-blue-100  mb-1">
+                    {validPopularMovies.length}+
+                  </div>
+                  <div className="text-blue-100  text-sm">Altas Avaliações</div>
                 </div>
-
-                {/* Stats Quick View */}
-                <div className="flex flex-row items-center justify-center gap-4 mt-10">
-                  <div className="text-center">
-                    <div className="text-2xl md:text-3xl font-bold dark:text-blue-100  mb-1">
-                      {validRecentMovies.length}+
-                    </div>
-                    <div className="text-blue-100 text-sm">Filmes Recentes</div>
+                <div className="text-center">
+                  <div className="text-2xl md:text-3xl font-bold text-blue-100  mb-1">
+                    10+
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl md:text-3xl font-bold dark:text-blue-100  mb-1">
-                      {validPopularMovies.length}+
-                    </div>
-                    <div className="text-blue-100  text-sm">
-                      Altas Avaliações
-                    </div>
+                  <div className="text-blue-100  text-sm">Gêneros</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl md:text-3xl font-bold text-blue-100  mb-1">
+                    2025
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl md:text-3xl font-bold text-blue-100  mb-1">
-                      10+
-                    </div>
-                    <div className="text-blue-100  text-sm">Gêneros</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl md:text-3xl font-bold text-blue-100  mb-1">
-                      2025
-                    </div>
-                    <div className="text-blue-100  text-sm">Atualizado</div>
-                  </div>
+                  <div className="text-blue-100  text-sm">Atualizado</div>
                 </div>
               </div>
             </div>
-
+          </div>
 
           {/* Search Header */}
           {/* {!showHero && (
